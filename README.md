@@ -29,11 +29,11 @@ set AWS_PROFILE=myProfile
 
 ## Execution
 ```
-node index.js EventXXXEx.scsb EventXXX.scdb
+node index.js s3bucket EventXXXEx.scsb EventXXX.scdb
 ```
 e.g.
 ```
-node index.js c:\SkiAlpPro\Events\Event019Ex.scdb c:\SkiAlpPro\Events\Event019.scdb
+node index.js vola-poorman c:\SkiAlpPro\Events\Event019Ex.scdb c:\SkiAlpPro\Events\Event019.scdb
 ```
 
 Outputs HTML file named skiers_data.html
