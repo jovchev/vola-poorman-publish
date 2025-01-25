@@ -92,9 +92,9 @@ async function resultsFromHeats() {
   }
 }
 
-async function queryAndUpload() {
+async function queryAndUpload(competitors) {
 	try {
-	const competitors = await fetchCompetitors();
+	
 	const heats = await resultsFromHeats();
 	// Combine data from all tables
 	const combinedRows = competitors.map(competitor => {
@@ -109,6 +109,8 @@ async function queryAndUpload() {
 		Heat2: { status: row2.C_STATUS, time: row2.C_TIME }
 	  };
 	});
+	// Sort competitors by Bib number (C_NUM)
+	combinedRows.sort((a, b) => a.C_NUM - b.C_NUM);
 	// Group data by category
 	const groupedByCategory = combinedRows.reduce((groups, row) => {
 	  if (!groups[row.Category]) groups[row.Category] = [];
@@ -168,17 +170,28 @@ async function queryAndUpload() {
 
         htmlContent += `</body>
 </html>`;
-		console.log(htmlContent);
 	await uploadFileToS3(htmlContent);
-	
-	process.exit(0);
   } catch (error) {
     console.error('Error querying users:', error);
   }
 	
 }
+let isRunning = false; 
+// Set the interval to run every 30 seconds
+setInterval(async () => {
+	if (isRunning) {
+		console.log("Previous execution is still running, skipping this interval.");
+		return;  // Skip this interval if the function is already running
+	}
+	isRunning = true;  // Set flag to true, indicating that the function is running
+	try {
+		const competitors = await fetchCompetitors();
+		await queryAndUpload(competitors);
+	} catch (error) {
+		console.error("Error during interval execution:", error);
+	} finally {
+		isRunning = false;  // Reset the flag once the async function is complete
+	}
+}, 30000); // 30 seconds
 
-(async () => {
-	await queryAndUpload();
-})();
 
