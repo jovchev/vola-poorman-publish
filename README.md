@@ -16,3 +16,6 @@ node index.js c:\SkiAlpPro\Events\Event019Ex.scdb c:\SkiAlpPro\Events\Event019.s
 ```
 
 Outputs HTML file named skiers_data.html
+
+## Disclamer
+Code is created using ChatGPT
